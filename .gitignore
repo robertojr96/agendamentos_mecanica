@@ -1,5 +1,11 @@
-node_modules/
-dist/
-.output/
 .env
-*.log
+backend/.env
+node_modules
+backend/dist
+backend/src/generated
+infra/k8s/postgres.yamlbackend/.agents/
+backend/.claude/
+backend/.windsurf/
+backend/skills-lock.json
+infra/k8s/postgres.yaml
+backend/.agents/
