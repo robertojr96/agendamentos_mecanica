@@ -15,6 +15,9 @@ spec:
       - name: backend
         image: backend:local
         imagePullPolicy: Never
+        envFrom:
+        - secretRef:
+            name: postgres-secret
         ports:
         - containerPort: 3000
 ---
@@ -28,3 +31,4 @@ spec:
   ports:
   - port: 3000
     targetPort: 3000
+
