@@ -1,4 +1,4 @@
--- CreateTable
+
 CREATE TABLE "Agenda" (
     "id" SERIAL NOT NULL,
     "status" TEXT NOT NULL,

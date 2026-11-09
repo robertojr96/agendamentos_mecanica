@@ -13,10 +13,21 @@ datasource db {
 }
 
 model Agenda {
-  id Int @id @default(autoincrement())
-  status String
-  aula String 
-  hora String
+  id        Int      @id @default(autoincrement())
+  status    String
+  aula      String
+  hora      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  nome      String
+  email     String   @unique
+  senha     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("usuarios")
 }
