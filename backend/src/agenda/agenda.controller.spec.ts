@@ -9,7 +9,7 @@ describe('AgendaController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AgendaController],
-      providers: [AgendaService],
+      providers: [{ provide: AgendaService, useValue: {} }],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: vi.fn(() => true) })

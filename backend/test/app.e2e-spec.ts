@@ -15,7 +15,11 @@ describe('AppController (e2e)', () => {
       imports: [AppModule],
     })
       .overrideProvider(PrismaService)
-      .useValue({ $connect: vi.fn(), $disconnect: vi.fn() })
+      .useValue({
+        $connect: vi.fn(),
+        $disconnect: vi.fn(),
+        agenda: { findMany: vi.fn().mockResolvedValue([]) },
+      })
       .compile();
 
     app = moduleFixture.createNestApplication();

@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head><meta charset="UTF-8"><title>Sistema Mecânica</title></head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Mecânica</title>
+</head>
 <body>
-  <h1>Frontend rodando!</h1>
-  <p id="status">Carregando...</p>
-  <script>
-    fetch("/api")
-      .then(r => r.json())
-      .then(data => document.getElementById("status").innerText = "API respondeu: " + data.message)
-      .catch(() => document.getElementById("status").innerText = "Erro ao falar com a API");
-  </script>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>

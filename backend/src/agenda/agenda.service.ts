@@ -1,33 +1,56 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import type { AgendaModel } from '../generated/prisma/models/Agenda.js';
+import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateAgendaDto } from './dto/create-agenda.dto.js';
 import { UpdateAgendaDto } from './dto/update-agenda.dto.js';
 
 @Injectable()
 export class AgendaService {
-    private agenda: any[] = [
-        { id: 1, status: 'agendado', aula: 1, hora: new Date('2026-08-20T20:00:00Z') },
-        { id: 2, status: 'agendado', aula: 2, hora: new Date('2026-08-21T20:00:00Z') },
-    ];
+  constructor(private readonly prisma: PrismaService) {}
 
-    findAll() {
-        return this.agenda;
+  async findAll() {
+    const agendas = await this.prisma.agenda.findMany({
+      orderBy: { hora: 'asc' },
+    });
+    return agendas.map((agenda) => this.toResponse(agenda));
+  }
+
+  async create(dto: CreateAgendaDto) {
+    const agenda = await this.prisma.agenda.create({
+      data: {
+        status: dto.status,
+        nome: dto.nome,
+        aula: String(dto.aula),
+        hora: dto.hora,
+      },
+    });
+    return this.toResponse(agenda);
+  }
+
+  async update(id: number, dto: UpdateAgendaDto) {
+    const existing = await this.prisma.agenda.findUnique({ where: { id } });
+    if (!existing) {
+      throw new NotFoundException(`Agenda ${id} não encontrada`);
     }
 
-    create(dto: CreateAgendaDto) {
-        const nova = {
-            id: this.agenda.length + 1,
-            ...dto,
-            hora: new Date(dto.hora),
-        };
-        this.agenda.push(nova);
-        return nova;
-    }
+    const agenda = await this.prisma.agenda.update({
+      where: { id },
+      data: {
+        ...(dto.status !== undefined && { status: dto.status }),
+        ...(dto.nome !== undefined && { nome: dto.nome }),
+        ...(dto.aula !== undefined && { aula: String(dto.aula) }),
+        ...(dto.hora !== undefined && { hora: dto.hora }),
+      },
+    });
+    return this.toResponse(agenda);
+  }
 
-    update(id: number, dto: UpdateAgendaDto) {
-        const item = this.agenda.find((a) => a.id === id);
-        if (!item) throw new NotFoundException(`Agenda ${id} não encontrada`);
-        Object.assign(item, dto, dto.hora ? { hora: new Date(dto.hora) } : {});
-        return item;
-    }
+  private toResponse(agenda: AgendaModel) {
+    return {
+      ...agenda,
+      aula: Number(agenda.aula),
+      hora: new Date(agenda.hora),
+    };
+  }
 }
 

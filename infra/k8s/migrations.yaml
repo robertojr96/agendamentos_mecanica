@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backend-migrations
+  namespace: mecanica
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 600
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: migrate
+          image: backend:local
+          imagePullPolicy: Never
+          command: ["npm", "run", "prisma:migrate:deploy"]
+          envFrom:
+            - secretRef:
+                name: backend-secret
